@@ -3,6 +3,7 @@ const express = require('express')
 const socket = require('socket.io')
 const http = require('http')
 const path = require('path')
+const moment = require('moment')
 
 // express 객체 [express를 실행한 내용을 변수에 저장]
 const app = express()
@@ -17,11 +18,16 @@ app.use(express.static(path.join(__dirname,'src')))
 
 
 
+
 io.on('connection', (socket) =>{
 
     socket.on('chatting',(data)=>{
-        console.log(data)
-        io.emit('chatting',`${data}` )
+        const { name, msg } = data;
+        io.emit('chatting', {
+            name,
+            msg,
+            time : moment(new Date()).format("h:ss A")
+        })
     })
 })
 
